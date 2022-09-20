@@ -1,6 +1,7 @@
-import { List, ThemeProvider, createTheme } from '@mui/material';
+import { List, ThemeProvider, createTheme, Button } from '@mui/material';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { collection, query, onSnapshot, deleteDoc, doc, updateDoc, addDoc } from 'firebase/firestore'
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Addtodo from "./components/Addtodo";
 import GetTodo from "./components/GetTodo";
 import Login from './components/Login';
@@ -12,6 +13,7 @@ function App() {
   let [docs, setDocs] = useState([]);
   let [loading, setLoading] = useState(true);
   let [error, setError] = useState('');
+  let [isLoggedIn, setLoggedIn] = useState();
 
   useEffect(() => {
     const unsub = onSnapshot(query(collection(db, "todo")), (doc) => {
@@ -24,6 +26,21 @@ function App() {
       return () => unsub();
     });
   }, [])
+
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/firebase.User
+      const uid = user.uid;
+      setLoggedIn(true);
+    } else {
+      // User is signed out
+      console.log(user);
+
+      setLoggedIn(false);
+    }
+  });
 
 
   const handlesubmit = async (title) => {
@@ -84,11 +101,24 @@ function App() {
     }
   }
 
+
+  const handleLogout = () => {
+    signOut(auth).then(() => {
+      alert("Sign-out successful.")
+    }).catch((error) => {
+      alert(error.message)
+    });
+  }
   return (
-    <>
-    <Login/>
-    <Register/>
-      {/* {loading ? 'Loading...' :
+    <React.Fragment>
+      {!isLoggedIn ? <>
+        <Login />
+        <Register />
+        <Button variant='contained' onClick={handleLogout}>Logout</Button>
+      </>
+        :
+        <>
+          {loading ? 'Loading...' :
         <div>
           {error !== '' && <p> {error} </p>}
           <Title title='alpha-Todo' />
@@ -104,8 +134,10 @@ function App() {
             }
           </List>
         </div>
-      } */}
-    </>
+      }
+        </>
+      }
+    </React.Fragment>
   )
 }
 
