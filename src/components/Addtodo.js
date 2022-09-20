@@ -6,12 +6,12 @@ export default function Addtodo({handlesubmit}) {
     const handleInputSubmit=(e)=>{
         e.preventDefault();
         handlesubmit(title);
-        setTitle('')
+        setTitle('');
     }
 
   return (
     <form onSubmit={handleInputSubmit}>
-        <input type="text" placeholder='Enter Todo...' onChange={e=>setTitle(e.target.value)} />
+        <input type="text" placeholder='Enter Todo...' value={title} onChange={e=>setTitle(e.target.value)} />
         <button>Add</button>
     </form>
   )

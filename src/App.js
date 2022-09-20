@@ -11,14 +11,15 @@ function App() {
 
   useEffect(() => {
     const unsub = onSnapshot(query(collection(db, "todo")), (doc) => {
+      let tempArr = [];
       doc.forEach(e => {
-        console.log(e.data());
-        setDocs(p => [...p, { info: e.data(), id: e.id }])
-      })
-    });
-
-    return () => unsub();
-  }, []);
+        tempArr.push({ info: e.data(), id: e.id });
+        console.log(tempArr);
+      });
+      setDocs(tempArr);
+      return () => unsub();
+    }, []);
+  }, [])
 
 
   const handlesubmit = async (title) => {
@@ -59,26 +60,42 @@ function App() {
         alert("Updated Successfully" + title);
       }
     }
-    catch(e){
+    catch (e) {
       console.log(e);
       setError(e)
     }
 
   }
 
-  return (
-    <div className="App">
-      {error !== '' && <p> {error} </p>}
-      <Title title='alpha-Todo' />
-      <Addtodo handlesubmit={handlesubmit} />
-      <GetTodo
-        handleDelete={handleDelete}
-        handleUpdate={handleUpdate}
-        isUpdating
-        docs={docs}
-      />
-    </div>
-  );
-}
 
-export default App;
+  const toggleChange = async (isChecked, id) => {
+    try {
+
+      await updateDoc(doc(db, 'todo', id), {
+        completed: isChecked
+      })
+    }
+    catch (e) {
+        console.log(e);
+        setError(e)
+      }
+    }
+
+  return (
+      <div className="App">
+        {error !== '' && <p> {error} </p>}
+        <Title title='alpha-Todo' />
+        <Addtodo handlesubmit={handlesubmit} />
+        {docs.map(todo => <GetTodo
+          handleDelete={handleDelete}
+          handleUpdate={handleUpdate}
+          toggleChange={toggleChange}
+          todo={todo}
+        />
+        )
+        }
+      </div>
+    );
+  }
+
+  export default App;
