@@ -3,6 +3,8 @@ import { collection, query, onSnapshot, deleteDoc, doc, updateDoc, addDoc } from
 import { useState, useEffect } from "react";
 import Addtodo from "./components/Addtodo";
 import GetTodo from "./components/GetTodo";
+import Login from './components/Login';
+import Register from './components/Register';
 import Title from "./components/Title";
 import { db } from "./Firebase";
 
@@ -12,7 +14,6 @@ function App() {
   let [error, setError] = useState('');
 
   useEffect(() => {
-    console.log(loading)
     const unsub = onSnapshot(query(collection(db, "todo")), (doc) => {
       let tempArr = [];
       doc.forEach(e => {
@@ -85,22 +86,25 @@ function App() {
 
   return (
     <>
-      {loading ? 'Loading...' : <div>
-        {error !== '' && <p> {error} </p>}
-        <Title title='alpha-Todo' />
-        <Addtodo handlesubmit={handlesubmit} />
-        <List>
-          {docs.map(todo => <GetTodo
-            handleDelete={handleDelete}
-            handleUpdate={handleUpdate}
-            toggleChange={toggleChange}
-            todo={todo}
-          />
-          )
-          }
-        </List>
-      </div>
-      }
+    <Login/>
+    <Register/>
+      {/* {loading ? 'Loading...' :
+        <div>
+          {error !== '' && <p> {error} </p>}
+          <Title title='alpha-Todo' />
+          <Addtodo handlesubmit={handlesubmit} />
+          <List>
+            {docs.map(todo => <GetTodo
+              handleDelete={handleDelete}
+              handleUpdate={handleUpdate}
+              toggleChange={toggleChange}
+              todo={todo}
+            />
+            )
+            }
+          </List>
+        </div>
+      } */}
     </>
   )
 }
