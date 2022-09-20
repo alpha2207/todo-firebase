@@ -1,5 +1,5 @@
-import { collection, query, onSnapshot, deleteDoc, doc, updateDoc,addDoc } from 'firebase/firestore'
-import { useState,useEffect } from "react";
+import { collection, query, onSnapshot, deleteDoc, doc, updateDoc, addDoc } from 'firebase/firestore'
+import { useState, useEffect } from "react";
 import Addtodo from "./components/Addtodo";
 import GetTodo from "./components/GetTodo";
 import Title from "./components/Title";
@@ -22,35 +22,53 @@ function App() {
 
 
   const handlesubmit = async (title) => {
-    if (title !== '') {
-      await addDoc(collection(db, "todo"), {
-        title,
-        completed: false
-      })
-    } else {
-      alert("Title is empty!")
+    try {
+      if (title !== '') {
+        await addDoc(collection(db, "todo"), {
+          title,
+          completed: false
+        })
+      } else {
+        alert("Title is empty!")
+      }
+    }
+    catch (e) {
+      console.log(e);
+      setError(e);
     }
   }
 
   const handleDelete = async (id) => {
-    await deleteDoc(doc(db, 'todo', id));
+    try {
+      await deleteDoc(doc(db, 'todo', id));
+    }
+    catch (e) {
+      console.log(e);
+      setError(e);
+    }
   }
 
   const handleUpdate = async (title, id) => {
-    if (title === '' || !title) {
-      alert("Title must have a value");
-    } else {
-      await updateDoc(doc(db, 'todo', id), {
-        title
-      });
-      alert("Updated Successfully"+title);
+    try {
+      if (title === '' || !title) {
+        alert("Title must have a value");
+      } else {
+        await updateDoc(doc(db, 'todo', id), {
+          title
+        });
+        alert("Updated Successfully" + title);
+      }
+    }
+    catch(e){
+      console.log(e);
+      setError(e)
     }
 
   }
 
   return (
     <div className="App">
-      {error != '' && <p>{error}</p>}
+      {error !== '' && <p> {error} </p>}
       <Title title='alpha-Todo' />
       <Addtodo handlesubmit={handlesubmit} />
       <GetTodo
