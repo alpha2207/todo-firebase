@@ -1,24 +1,17 @@
-import { addDoc, collection } from 'firebase/firestore';
 import React, { useState } from 'react';
-import { db } from '../Firebase';
 
-export default function Addtodo() {
+export default function Addtodo({handlesubmit}) {
     const [title, setTitle] = useState('');
-    const handlesubmit=async (e)=>{
+    
+    const handleInputSubmit=(e)=>{
         e.preventDefault();
-        if(title!==''){
-            await addDoc(collection(db,"todo"),{
-                title,
-                completed:false
-            })
-            setTitle('');
-        }else{
-            alert("Title is empty!")
-        }
+        handlesubmit(title);
+        setTitle('')
     }
+
   return (
-    <form onSubmit={handlesubmit}>
-        <input type="text" onChange={e=>setTitle(e.target.value)} />
+    <form onSubmit={handleInputSubmit}>
+        <input type="text" placeholder='Enter Todo...' onChange={e=>setTitle(e.target.value)} />
         <button>Add</button>
     </form>
   )
