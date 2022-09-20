@@ -1,21 +1,8 @@
-import { getDocs, collection, query, onSnapshot, deleteDoc, doc, updateDoc } from 'firebase/firestore'
-import React, { useEffect, useState } from 'react';
-import { db } from '../Firebase';
+import React, { useState } from 'react';
 
-export default function GetTodo({ handleDelete, handleUpdate }) {
-    let [docs, setDocs] = useState([]);
+export default function GetTodo({ handleDelete, handleUpdate, isUpdating, docs }) {
     let [isDisabled, setIsDisabled] = useState(true);
     let [updatedTitle, setUpdatedTitle] = useState(null);
-    useEffect(() => {
-        const unsub = onSnapshot(query(collection(db, "todo")), (doc) => {
-            doc.forEach(e => {
-                console.log(e.data());
-                setDocs(p => [...p, { info: e.data(), id: e.id }])
-            })
-        });
-
-        return () => unsub();
-    }, []);
 
     return (
         <div>
@@ -27,6 +14,7 @@ export default function GetTodo({ handleDelete, handleUpdate }) {
                             key={e.id}
                             style={{ textDecoration: e.info.completed ? "line-through" : '' }}
                             value={updatedTitle === null ? e.info.title : updatedTitle}
+                            placeholder='Enter Title'
                             disabled={isDisabled}
                             onChange={e => setUpdatedTitle(e.target.value)}
                         />

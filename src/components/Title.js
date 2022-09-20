@@ -1,7 +1,7 @@
 import React from 'react'
 
-export default function Title() {
+export default function Title({title}) {
   return (
-    <div>Todo App</div>
+    <h3>{title}</h3>
   )
 }
