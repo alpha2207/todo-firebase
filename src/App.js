@@ -111,30 +111,34 @@ function App() {
   }
   return (
     <React.Fragment>
-      {!isLoggedIn ? <>
-        <Login />
-        <Register />
-        <Button variant='contained' onClick={handleLogout}>Logout</Button>
-      </>
-        :
+      {loading ? 'Loading...' :
         <>
-          {loading ? 'Loading...' :
-        <div>
-          {error !== '' && <p> {error} </p>}
-          <Title title='alpha-Todo' />
-          <Addtodo handlesubmit={handlesubmit} />
-          <List>
-            {docs.map(todo => <GetTodo
-              handleDelete={handleDelete}
-              handleUpdate={handleUpdate}
-              toggleChange={toggleChange}
-              todo={todo}
-            />
-            )
-            }
-          </List>
-        </div>
-      }
+          {!isLoggedIn ? <div>
+            <Login />
+            <Register />
+            <Button variant='contained' onClick={handleLogout}>Logout</Button>
+          </div>
+            :
+            <>
+
+              <div>
+                {error !== '' && <p> {error} </p>}
+                <Title title='alpha-Todo' />
+                <Addtodo handlesubmit={handlesubmit} />
+                <List>
+                  {docs.map(todo => <GetTodo
+                    handleDelete={handleDelete}
+                    handleUpdate={handleUpdate}
+                    toggleChange={toggleChange}
+                    todo={todo}
+                  />
+                  )
+                  }
+                </List>
+              </div>
+
+            </>
+          }
         </>
       }
     </React.Fragment>

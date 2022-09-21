@@ -26,9 +26,9 @@ export default function Register() {
     return (
         <div>
             <h2>Register</h2>
-            {user.email} {user.password}
-            <input onChange={handleInputChange} type="email" name='email' />
-            <input onChange={handleInputChange} type="password" name='password' />
+            <input onChange={handleInputChange} placeholder='Enter Your Name' type="text" name='name'  /><br></br>
+            <input onChange={handleInputChange} placeholder='Enter Your Email' type="email" name='email' /><br></br>
+            <input onChange={handleInputChange} placeholder='Enter Your Password' type="password" name='password' /><br></br>
             <button onClick={handleLogin}>Register</button>
         </div>
     )
